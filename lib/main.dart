@@ -1,10 +1,17 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:forui/forui.dart';
-
+import 'package:http/http.dart' as http;
+///чтобы дарт подключался к серверу на питончике и выполнял http get запрос и выводил ответ сервера
 import 'theme/theme.dart';
 
 void main() {
   runApp(const Application());
+}
+
+Future<String> soso() async {
+  var url = Uri.http('144.31.165.159:8000');
+  var response = await http.get(url);
+  return response.body;
 }
 
 class Application extends StatelessWidget {
@@ -33,7 +40,7 @@ class Example extends StatefulWidget {
 
 class _ExampleState extends State<Example> {
   
-  String _switch = ":(";
+  String _switch = ":(", soso_text = "";
   bool _button_flag = false;
 
   @override
@@ -44,6 +51,11 @@ class _ExampleState extends State<Example> {
       children: [
         FButton(
           onPress: () {
+            soso().then((response) {
+              setState(() {
+                soso_text = response;
+              });
+            });
             setState(() {
               _button_flag = !_button_flag;
 
@@ -57,6 +69,7 @@ class _ExampleState extends State<Example> {
           mainAxisSize: .min,
           child: Text(_switch),
         ),
+        Text(soso_text),
       ]
     ),
   );
