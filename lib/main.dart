@@ -20,9 +20,7 @@ class Application extends StatelessWidget {
       data: Theme.brightnessOf(context) == .light ? lightTheme : darkTheme,
       child: FToaster(child: FTooltipGroup(child: child!)),
     ),
-    home: const FScaffold(
-      child: Example(),
-    ),
+    home: Example(),
   );
 }
 
@@ -34,21 +32,32 @@ class Example extends StatefulWidget {
 }
 
 class _ExampleState extends State<Example> {
-  int _count = 0;
+  
+  String _switch = ":(";
+  bool _button_flag = false;
 
   @override
-  Widget build(BuildContext context) => Center(
+  Widget build(BuildContext context) => FScaffold(
     child: Column(
-      mainAxisSize: .min,
-      spacing: 10,
+      mainAxisAlignment: .center,
+      crossAxisAlignment: .center,
       children: [
-        Text('Count: $_count'),
         FButton(
-          onPress: () => setState(() => _count++),
-          suffix: const Icon(FLucideIcons.chevronsUp),
-          child: const Text('Increase'),
+          onPress: () {
+            setState(() {
+              _button_flag = !_button_flag;
+
+              if (_button_flag) {
+                _switch = "HUY :)";
+              } else {
+                _switch = ":(";
+              }
+            });
+          },
+          mainAxisSize: .min,
+          child: Text(_switch),
         ),
-      ],
+      ]
     ),
   );
 }
