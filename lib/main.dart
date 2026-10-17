@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:forui/forui.dart';
 import 'package:http/http.dart' as http;
-///чтобы дарт подключался к серверу на питончике и выполнял http get запрос и выводил ответ сервера
+
+import 'sse_client.dart';
 import 'theme/theme.dart';
 
 void main() {
@@ -9,7 +12,7 @@ void main() {
 }
 
 Future<String> soso() async {
-  var url = Uri.http('144.31.165.159:8000');
+  var url = Uri.http('64.188.66.245:8000');
   var response = await http.get(url);
   return response.body;
 }
@@ -41,7 +44,21 @@ class Example extends StatefulWidget {
 class _ExampleState extends State<Example> {
   
   String _switch = ":(", soso_text = "";
-  bool _button_flag = false;
+
+  @override
+  void initState() {
+    super.initState();
+    subscribeToSSE().listen((data) {
+      final state = json.decode(data.data);
+      setState(() {
+        if (state["button_state"] == true) {
+          _switch = "huy min;)";
+        } else {
+          _switch = ":(";
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) => FScaffold(
@@ -55,15 +72,6 @@ class _ExampleState extends State<Example> {
               setState(() {
                 soso_text = response;
               });
-            });
-            setState(() {
-              _button_flag = !_button_flag;
-
-              if (_button_flag) {
-                _switch = "HUY :)";
-              } else {
-                _switch = ":(";
-              }
             });
           },
           mainAxisSize: .min,
